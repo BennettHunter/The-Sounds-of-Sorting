@@ -4,15 +4,91 @@ import org.junit.Test;
 
 public class SortsTest {
 
+/* ------------------------------------------------------------- Test Suite for Selection Sort ------------------------------------------------------------ */	
 	@Test
-	public void testSort() {
-		int[] arr = {6,3,34,6,8,24,34334};
-		Sorts.insertionSort(arr);
-		assertEquals(arr[0], 3);
+	public void testSelectionSort1() {
+		int[] test = {3,9,2,8,6,4,1,7,5};
+		Sorts.slectionSort(test);
+		int[] sorted = {1,2,3,4,5,6,7,8,9};
+		assertArrayEquals(test, sorted);
+		
+	}
+	
+	@Test
+	public void testSelectionSort2() {
+		int[] test = {2,8,2,0,2,3,1,4};
+		Sorts.slectionSort(test);
+		int[] sorted = {0,1,2,2,2,3,4,8};
+		assertArrayEquals(test, sorted);
+		
+	}
+	
+	@Test
+	public void testSelectionSort3() {
+		int[] test = {19302, 478901, 174839275, 1, 8695045};
+		Sorts.slectionSort(test);
+		int[] sorted = {1, 19302, 478901,8695045, 174839275};
+		assertArrayEquals(test, sorted);
+		
+	}
+	
+		
+/* ------------------------------------------------------------- Test Suite for Insertion Sort ------------------------------------------------------------- */	
+	@Test
+	public void testInsertionSort1() {
+		int[] test = {3,9,2,8,6,4,1,7,5};
+		Sorts.insertionSort(test);
+		int[] sorted = {1,2,3,4,5,6,7,8,9};
+		assertArrayEquals(test, sorted);
+		
+	}
+	
+	@Test
+	public void testInsertionSort2() {
+		int[] test = {2,8,2,0,2,3,1,4};
+		Sorts.insertionSort(test);
+		int[] sorted = {0,1,2,2,2,3,4,8};
+		assertArrayEquals(test, sorted);
+		
+	}
+	
+	@Test
+	public void testInsertionSort3() {
+		int[] test = {19302, 478901, 174839275, 1, 8695045};
+		Sorts.insertionSort(test);
+		int[] sorted = {1, 19302, 478901,8695045, 174839275};
+		assertArrayEquals(test, sorted);
 		
 	}
 	
 	
+/* ------------------------------------------------------------- Test Suite for Bubble Sort ------------------------------------------------------------------ */	
+	@Test 
+	public void testBubbleSort1() {
+		int[] test = {3,9,2,8,6,4,1,7,5};
+		Sorts.bubbleSort(test);
+		int[] sorted = {1,2,3,4,5,6,7,8,9};
+		assertArrayEquals(test, sorted);
+	}
+	
+	@Test 
+	public void testBubbleSort2() {
+		int[] test = {2,8,2,0,2,3,1,4};
+		Sorts.bubbleSort(test);
+		int[] sorted = {0,1,2,2,2,3,4,8};
+		assertArrayEquals(test, sorted);
+	}
+	
+	@Test 
+	public void testBubbleSort3() {
+		int[] test = {19302, 478901, 174839275, 1, 8695045};
+		Sorts.bubbleSort(test);
+		int[] sorted = {1, 19302, 478901,8695045, 174839275};
+		assertArrayEquals(test, sorted);
+	}
+	
+		
+/* ------------------------------------------------------------ Test Suite for Merge Sort ----------------------------------------------------------------------- */	
 	@Test
 	public void testMergeSort1() {
 		int[] testarr = {3,7,0,4,0,2,1,9,9,7,0,6,2,8,3,0,4,5};
@@ -38,11 +114,12 @@ public class SortsTest {
 	}
 	
 	
-			
+	
+/* ------------------------------------------------------------ Test Suite for Quick Sort ----------------------------------------------------------------------- */			
 	@Test 
 	public void testQuickSort1() {
 		int[] test = {3,9,2,8,6,4,1,7,5};
-		Sort.quicksort(test);
+		Sorts.quicksort(test);
 		int[] sorted = {1,2,3,4,5,6,7,8,9};
 		assertArrayEquals(test, sorted);
 	} 
@@ -50,7 +127,7 @@ public class SortsTest {
 	@Test 
 	public void testQuickSort2() {
 		int[] test = {1,4,8,2,1,10};
-		Sort.quicksort(test);
+		Sorts.quicksort(test);
 		int[] sorted = {1,1,2,4,8,10};
 		assertArrayEquals(test, sorted);
 	}
@@ -58,7 +135,7 @@ public class SortsTest {
 	@Test 
 	public void testQuickSort3() {
 		int[] test = {4,8,1,22,4,1,5,6};
-		Sort.quicksort(test);
+		Sorts.quicksort(test);
 		int[] sorted = {1,1,4,4,5,6,8,22};
 		assertArrayEquals(test, sorted);
  
