@@ -7,8 +7,8 @@ public class Sorts {
 	 * @param a the index of the first element being swapped
 	 * @param b the index of the second element being swapped
 	 */
-	public static void swap(int[] arr, int a, int b) {
-		int temp = arr[a];
+	public static <T> void swap(T[] arr, int a, int b) {
+		T temp = arr[a];
 		arr[a] = arr[b];
 		arr[b] = temp;
 	}
@@ -32,11 +32,11 @@ public class Sorts {
 	 * sorts an array with the insertion technique
 	 * @param arr the array to be sorted
 	 */
-	public static void insertionSort(int[] arr) {
+	public static <T extends Comparable<T>> void insertionSort(T[] arr) {
 		for(int i = 0 ; i < arr.length ; i++) {
 			for(int j = i; j> 0; j--) {
 				int x = j - 1;
-				if(arr[x]>arr[j]) {
+				if(arr[x].compareTo(arr[j]) > 0) {    //  arr[x] > arr[j]
 					swap(arr, x, j);
 				}
 			}
