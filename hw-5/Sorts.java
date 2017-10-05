@@ -82,7 +82,7 @@ public class Sorts {
 	}
 	
 	
-       static void bubbleSort(int[] arr) {  
+       public static void bubbleSort(int[] arr) {  
            int n = arr.length;  
            int temp = 0;  
            for(int i=0; i < n; i++){  
@@ -96,6 +96,63 @@ public class Sorts {
                    }  
             }
        }
+	public static int findMedianIndex(int[]arr, int a, int b, int c) {
+		int answer = Math.max(Math.min(arr[a], arr[b]), Math.min(Math.max(arr[a], arr[b]), arr[c])); 
+		if(answer == arr[a]) {
+			return a;
+		}
+		else if(answer == arr[b]) {
+			return b;
+		}
+		else {
+			return c;
+		}
+	}
 	
+	public static void quicksortHelper(int[] arr, int lo, int hi) {
 
+		// finding the median to be placed at end
+		int lastIndex = hi;
+		int midIndex = lo + (hi - lo) / 2;
+		int quicksortMedian = findMedianIndex(arr, 0, midIndex, lastIndex);
+		Sort.swap(arr, quicksortMedian, lastIndex);
+
+		//setting pointers 
+		int i = lo;
+		int j = hi-1;
+
+		//Sorting the array
+		while(i <= j) {
+			
+			while(arr[i] < arr[lastIndex]) {
+				i++;
+			}	
+			
+			while(arr[j] > arr[lastIndex]) {
+				j--;
+			}
+			
+			if(i <= j) {
+				swap(arr, i, j);
+				i++;
+				j--;
+			}
+		}
+		
+		//splitting the array
+		
+		swap(arr, i, lastIndex);
+		
+		// sorting our two split arrays
+		if(lo < j) {
+			quicksortHelper(arr, lo, j);
+		}
+		if(i + 1 < hi) {
+			quicksortHelper(arr, i, hi);
+		}
+	}
+	
+	public static void quicksort(int[] arr) {
+		quicksortHelper(arr, 0, arr.length - 1);
+	}
 }
