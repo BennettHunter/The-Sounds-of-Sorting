@@ -32,7 +32,7 @@ public class Sorts {
 	 * sorts an array with the insertion technique
 	 * @param arr the array to be sorted
 	 */
-	public static <T extends Comparable<T>> void insertionSort(T[] arr) {
+	public static <T extends Comparable<? super T>> void insertionSort(T[] arr) {
 		for(int i = 0 ; i < arr.length ; i++) {
 			for(int j = i; j> 0; j--) {
 				int x = j - 1;
