@@ -1,210 +1,231 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Sorts {
 
-	/**
-	 * swaps two elements of an array
-	 * @param arr the array in which the elements will be swapped
-	 * @param a the index of the first element being swapped
-	 * @param b the index of the second element being swapped
-	 */
-	public static <T> void swap(T[] arr, int a, int b) {
-		T temp = arr[a];
-		arr[a] = arr[b];
-		arr[b] = temp;
-	}
+    /**
+     * swaps two elements of an array
+     * @param arr the array in which the elements will be swapped
+     * @param a the index of the first element being swapped
+     * @param b the index of the second element being swapped
+     */
+    public static <T> void swap(T[] arr, int a, int b) {
+        T temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
 
-	/**
-	 * sorts an array with the selection technique
-	 * @param arr the array to be sorted
-	 */
-	public static void slectionSort(int[] arr) {
-		for(int i = 0 ; i < arr.length ; i++) {
-			int sm_index = i;
+    /**
+     * sorts an array with the selection technique
+     * @param arr the array to be sorted
+     */
+    public static <T extends Comparable<? super T>> void slectionSort(T[] arr) {
+        for(int i = 0 ; i < arr.length ; i++) {
+            int sm_index = i;
 
-			for(int j = i ; j < arr.length ; j++) {
-				if(arr[j] < arr[sm_index]) sm_index = j;
-			}
-			swap(arr, sm_index, i);
-		}	
-	}
+            for(int j = i ; j < arr.length ; j++) {
+                if(arr[j].compareTo(arr[sm_index])<0) sm_index = j;
+            }
+            swap(arr, sm_index, i);
+        }	
+    }
 
-	/**
-	 * sorts an array with the insertion technique
-	 * @param arr the array to be sorted
-	 */
-	public static <T extends Comparable<? super T>> void insertionSort(T[] arr) {
-		for(int i = 0 ; i < arr.length ; i++) {
-			for(int j = i; j> 0; j--) {
-				int x = j - 1;
-				if(arr[x].compareTo(arr[j]) > 0) {    //  arr[x] > arr[j]
-					swap(arr, x, j);
-				}
-			}
+    /**
+     * sorts an array with the insertion technique
+     * @param arr the array to be sorted
+     */
+    public static <T extends Comparable<? super T>> void insertionSort(T[] arr) {
+        for(int i = 0 ; i < arr.length ; i++) {
+            for(int j = i; j> 0; j--) {
+                int x = j - 1;
+                if(arr[x].compareTo(arr[j]) > 0) {    //  arr[x] > arr[j]
+                    swap(arr, x, j);
+                }
+            }
 
-		}
-	}
+        }
+    }
 
-	/**
-	 * pre: both halves of the array must be sorted
-	 * sorts an array using the merge technique from lo to hi
-	 * @param arr the array to sorted
-	 * @param lo the lower bound index
-	 * @param hi the upper bound index
-	 * @param mid the index between lo and hi
-	 */
-	public static void merge(int[] arr, int lo, int hi, int mid) {
-		int[] merged = new int[hi-lo+1];
-		int i = lo;
-		int j = mid+1;
-		int k = 0;
-		while(i <= mid && j <= hi){
-			if(arr[i] > arr[j]) {
-				merged[k++] = arr[j];
-				j++;
-			}else {
-				merged[k++] = arr[i];
-				i++;
-			}
+    /**
+     * pre: both halves of the array must be sorted
+     * sorts an array using the merge technique from lo to hi
+     * @param arr the array to sorted
+     * @param lo the lower bound index
+     * @param hi the upper bound index
+     * @param mid the index between lo and hi
+     */
+    public static <T extends Comparable<? super T>> void merge(T[] arr, int lo, int hi, int mid) {
+        Object[] merged = new Object[hi-lo+1];
+        int i = lo;
+        int j = mid+1;
+        int k = 0;
+        while(i <= mid && j <= hi){
+            if(arr[i].compareTo(arr[j])>0) {
+                merged[k++] = arr[j];
+                j++;
+            }else {
+                merged[k++] = arr[i];
+                i++;
+            }
 
-		}
+        }
 
-		while(j <= hi) {
-			merged[k++] = arr[j];
-			j++;
-		}
+        while(j <= hi) {
+            merged[k++] = arr[j];
+            j++;
+        }
 
-		while(i <= mid) {
-			merged[k++] = arr[i];
-			i++;
-		}
+        while(i <= mid) {
+            merged[k++] = arr[i];
+            i++;
+        }
 
-		for(int a = 0 ; a<merged.length; a++) {
-			arr[lo+a] = merged[a];
-		}
-	}
+        for(int a = 0 ; a<merged.length; a++) {
+            arr[lo+a] = (T) merged[a];
+        }
+    }
 
-	/**
-	 * Merge sort helper that sorts both left and right side of an array recursively from lo to hi
-	 * @param arr the array to be sorted
-	 * @param lo the lower bound index
-	 * @param hi the upper bound index
-	 */
-	public static void mergeSortHelper(int[] arr, int lo, int hi) {
-		if(lo<hi) {
-			int mid = lo + (hi-lo)/2;
+    /**
+     * Merge sort helper that sorts both left and right side of an array recursively from lo to hi
+     * @param arr the array to be sorted
+     * @param lo the lower bound index
+     * @param hi the upper bound index
+     */
+    public static <T extends Comparable<? super T>> void mergeSortHelper(T[] arr, int lo, int hi) {
+        if(lo<hi) {
+            int mid = lo + (hi-lo)/2;
 
-			//Sorting the left half
-			mergeSortHelper(arr,lo,mid);
+            //Sorting the left half
+            mergeSortHelper(arr,lo,mid);
 
-			//Sorting the right half
-			mergeSortHelper(arr,mid+1,hi);
+            //Sorting the right half
+            mergeSortHelper(arr,mid+1,hi);
 
-			//Merge the sorted parts
-			merge(arr,lo,hi,mid);
-		}
+            //Merge the sorted parts
+            merge(arr,lo,hi,mid);
+        }
 
-	}
+    }
 
-	/**
-	 * Driver method behind merge sort
-	 * @param arr the array to be sorted
-	 */
-	public static void mergeSort(int[] arr) {
-		mergeSortHelper(arr,0,arr.length-1);
-	}
-
-
-	public static void bubbleSort(int[] arr) {  
-		int n = arr.length;  
-		int temp = 0;  
-		for(int i=0; i < n; i++){  
-			for(int j=1; j < (n-i); j++){  
-				if(arr[j-1] > arr[j]){  
-					//swap elements  
-					temp = arr[j-1];  
-					arr[j-1] = arr[j];  
-					arr[j] = temp;  
-				}
-			}
-		}
-	}
+    /**
+     * Driver method behind merge sort
+     * @param arr the array to be sorted
+     */
+    public static <T extends Comparable<? super T>> void mergeSort(T[] arr) {
+        mergeSortHelper(arr,0,arr.length-1);
+    }
 
 
-	/**
-	 * Finds the best pivot point of array arr
-	 * @param arr the array you want to find pivot of
-	 * @param a the first index
-	 * @param b the second index
-	 * @param c the last index
-	 * @return Median of a, b, c, which should be used as pivot for quicksort
-	 */
-	public static int findMedianIndex(int[]arr, int a, int b, int c) {
-		int answer = Math.max(Math.min(arr[a], arr[b]), Math.min(Math.max(arr[a], arr[b]), arr[c])); 
-		if(answer == arr[a]) {
-			return a;
-		}
-		else if(answer == arr[b]) {
-			return b;
-		}
-		else {
-			return c;
-		}
-	}
+    public static <T extends Comparable<? super T>> void bubbleSort(T[] arr) {  
+        int n = arr.length;  
+        T temp;  
+        for(int i=0; i < n; i++){  
+            for(int j=1; j < (n-i); j++){  
+                if(arr[j-1].compareTo(arr[j])>0){  
+                    //swap elements  
+                    temp = arr[j-1];  
+                    arr[j-1] = arr[j];  
+                    arr[j] = temp;  
+                }
+            }
+        }
+    }
 
-	/**
-	 * Quicksort helper method that sorts array from arr[lo] to arr[hi]
-	 * @param arr the array to be sorted
-	 * @param lo the low end of the array 
-	 * @param hi the high end of the array
-	 */
-	public static void quicksortHelper(int[] arr, int lo, int hi) {
 
-		// finding the median to be placed at end
-		int lastIndex = hi;
-		int midIndex = lo + (hi - lo) / 2;
-		int quicksortMedian = findMedianIndex(arr, 0, midIndex, lastIndex);
-		swap(arr, quicksortMedian, lastIndex);
+    /**
+     * Finds the best pivot point of array arr
+     * @param arr the array you want to find pivot of
+     * @param fir the first index
+     * @param mid the second index
+     * @param last the last index
+     * @return Median of a, b, c, which should be used as pivot for quicksort
+     */
+    public static <T extends Comparable<? super T>> int findMedianIndex(T[]arr, int fir, int mid, int last) {
+        T answer = arr [mid];
+        if(answer.compareTo(arr[fir])>0) {
+            if(answer.compareTo(arr[last])<0) {
+                return mid;
+            }else {
+                return last;
+            }
+        }else {
+            if(answer.compareTo(arr[last])>0) {
+                return mid; 
+            }else {
+                return fir;
+            }
+        }
+        /*  //= Math.max(Math.min(arr[fir], arr[mid]), Math.min(Math.max(arr[fir], arr[mid]), arr[last])); 
+        if(answer == arr[fir]) {
+            return fir;
+        }
+        else if(answer == arr[mid]) {
+            return mid;
+        }
+        else {
+            return last;
+        } */
+    }
 
-		//setting pointers 
-		int i = lo;
-		int j = hi-1;
+    /**
+     * Quicksort helper method that sorts array from arr[lo] to arr[hi]
+     * @param arr the array to be sorted
+     * @param lo the low end of the array 
+     * @param hi the high end of the array
+     */
+    public static <T extends Comparable<? super T>> void quicksortHelper(T[] arr, int lo, int hi) {
 
-		//Sorting the array
-		while(i <= j) {
+        // finding the median to be placed at end
+        int lastIndex = hi;
+        int midIndex = lo + (hi - lo) / 2;
+        int quicksortMedian = findMedianIndex(arr, 0, midIndex, lastIndex);
+        swap(arr, quicksortMedian, lastIndex);
 
-			while(arr[i] < arr[lastIndex]) {
-				i++;
-			}	
+        //setting pointers 
+        int i = lo;
+        int j = hi-1;
 
-			while(arr[j] > arr[lastIndex]) {
-				j--;
-			}
+        //Sorting the array
+        while(i <= j) {
 
-			if(i <= j) {
-				swap(arr, i, j);
-				i++;
-				j--;
-			}
-		}
+            while(arr[i].compareTo(arr[lastIndex]) < 0) {
+                i++;
+            }	
 
-		//splitting the array
+            while(arr[j].compareTo(arr[lastIndex]) > 0) {
+                j--;
+            }
 
-		swap(arr, i, lastIndex);
+            if(i <= j) {
+                swap(arr, i, j);
+                i++;
+                j--;
+            }
+        }
 
-		// sorting our two split arrays
-		if(lo < j) {
-			quicksortHelper(arr, lo, j);
-		}
-		if(i + 1 < hi) {
-			quicksortHelper(arr, i, hi);
-		}
-	}
+        //splitting the array
 
-	/**
-	 * Quicksorts the array arr
-	 * @param arr the array to be sorted
-	 */
-	public static void quicksort(int[] arr) {
-		quicksortHelper(arr, 0, arr.length - 1);
-	}
+        swap(arr, i, lastIndex);
+
+        // sorting our two split arrays
+        if(lo < j) {
+            quicksortHelper(arr, lo, j);
+        }
+        if(i + 1 < hi) {
+            quicksortHelper(arr, i, hi);
+        }
+    }
+
+    /**
+     * Quicksorts the array arr
+     * @param arr the array to be sorted
+     */
+    public static <T extends Comparable<? super T>> void quicksort(T[] arr) {
+        quicksortHelper(arr, 0, arr.length - 1);
+    }
+    
+    public static <T> void eventSort(ArrayList<T> l, List<SortEvent<T>> events) {
+        
+    }
+    
 }
