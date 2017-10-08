@@ -2,13 +2,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import edu.grinnell.sortingvisualizer.sorts.Sorts;
+
 public class SortsTest {
 
     /* ------------------------------------------------------------- Test Suite for Selection Sort ------------------------------------------------------------ */	
     @Test
     public void testSelectionSort1() {
         Integer[] test = {3,9,2,8,6,4,1,7,5};
-        Sorts.slectionSort(test);
+        Sorts.selectionSort(test);
         Integer[] sorted = {1,2,3,4,5,6,7,8,9};
         assertArrayEquals(test, sorted);
 
@@ -17,7 +19,7 @@ public class SortsTest {
     @Test
     public void testSelectionSort2() {
         Integer[] test = {2,8,2,0,2,3,1,4};
-        Sorts.slectionSort(test);
+        Sorts.selectionSort(test);
         Integer[] sorted = {0,1,2,2,2,3,4,8};
         assertArrayEquals(test, sorted);
 
@@ -26,7 +28,7 @@ public class SortsTest {
     @Test
     public void testSelectionSort3() {
         Integer[] test = {19302, 478901, 174839275, 1, 8695045};
-        Sorts.slectionSort(test);
+        Sorts.selectionSort(test);
         Integer[] sorted = {1, 19302, 478901,8695045, 174839275};
         assertArrayEquals(test, sorted);
 

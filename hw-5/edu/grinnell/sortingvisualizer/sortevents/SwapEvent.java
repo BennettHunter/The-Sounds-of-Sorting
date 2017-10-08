@@ -1,7 +1,8 @@
+package edu.grinnell.sortingvisualizer.sortevents;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwapEvent<T> {
+public class SwapEvent<T> implements SortEvent<T>{
     private int first_index;
     private int second_index;
 
@@ -18,21 +19,12 @@ public class SwapEvent<T> {
         arr[this.second_index] = temp;
     }
 
-
-
-
-
     public List<Integer> getAffectedIndices(){
         List<Integer> list = new ArrayList<Integer>();
         list.add(this.first_index);
         list.add(this.second_index);
         return list;    
     }
-
-
-
-
-
 
     public boolean isEmphasized() {
         return true;
