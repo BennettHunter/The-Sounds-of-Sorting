@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 public class ArrayPanel extends JPanel {
 
     private NoteIndices notes;
-    
+
     /**
      * Constructs a new ArrayPanel that renders the given note indices to
      * the screen.
@@ -30,20 +30,21 @@ public class ArrayPanel extends JPanel {
         int size = notes.indices.length;
         int width = this.getWidth()/size;
         int max_height = this.getHeight();
+
         int x = 0;
         for(int i = 0; i < size; i++) {
-            if(i%2==0) {
-               g.setColor(Color.BLUE);
-            }else {
-               g.setColor(Color.GREEN);
-            }
-            
-            if(notes.isHighlighted(i)) g.setColor(Color.RED);
-                
+
+            int purple = 19+(120/size)*indices[i];
+
+            g.setColor(new Color(139,69,purple));
+
+
+            if(notes.isHighlighted(i)) g.setColor(new Color(200,200,230));
+
             int height = max_height*(indices[i]+1)/size;
             g.fillRect(x, max_height-height, width, height); 
             x+=width;
         }
-        
+
     }
 }
