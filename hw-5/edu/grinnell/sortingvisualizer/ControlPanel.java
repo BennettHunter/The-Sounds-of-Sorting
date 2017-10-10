@@ -158,6 +158,7 @@ public class ControlPanel extends JPanel {
                     @Override
                     public void run() {
                         if (index < event_size) {
+                            notes.clearAllHighlighted();
                             // TODO: fill me in
                             // 1. Apply the next sort event.
                             // 3. Play the corresponding notes denoted by the
@@ -167,7 +168,6 @@ public class ControlPanel extends JPanel {
                          // 1. Apply the next sort event.
                             e.apply(notes.getNotes());
                          // 2.Draw the panel
-                            notes.clearAllHighlighted();
                             notes.high_lights[e.getAffectedIndices().get(0)] = true;
                             notes.high_lights[e.getAffectedIndices().get(1)] = true;
                          // 3. Play the corresponding notes denoted by the
@@ -178,6 +178,8 @@ public class ControlPanel extends JPanel {
                             panel.paintComponent(panel.getGraphics());
                             panel.repaint();
                         } else {
+                            notes.clearAllHighlighted();
+                            panel.paintComponent(panel.getGraphics());
                             this.cancel();
                             panel.repaint();
                             isSorting = false;
