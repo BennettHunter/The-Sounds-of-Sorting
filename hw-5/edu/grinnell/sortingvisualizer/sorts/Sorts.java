@@ -23,9 +23,10 @@ public class Sorts {
     /**
      * sorts an array with the selection technique
      * @param arr the array to be sorted
+     * @returns List of SortEvents that records the actions needed to sort arr using selection Sort
      */
     public static <T extends Comparable<T>> List<SortEvent<T>> selectionSort(T[] arr) {
-        ArrayList<SortEvent<T>> events = new ArrayList<>();
+        List<SortEvent<T>> events = new ArrayList<>();
         for(int i = 0 ; i < arr.length ; i++) {
             int sm_index = i;
 
@@ -45,6 +46,7 @@ public class Sorts {
     /**
      * sorts an array with the insertion technique
      * @param arr the array to be sorted
+     * @return a list of SortEvents that records the actions needed to sort arr by insertion technique
      */
     public static <T extends Comparable<T>> List<SortEvent<T>> insertionSort(T[] arr) {
         List<SortEvent<T>> events = new ArrayList<SortEvent<T>>();
@@ -69,9 +71,9 @@ public class Sorts {
      * @param lo the lower bound index
      * @param hi the upper bound index
      * @param mid the index between lo and hi
+     * @return A list of SortEvents that records the actions needed to merge sort arr
      */
-    public static <T extends Comparable<T>> ArrayList<SortEvent<T>> merge(T[] arr, int lo, int hi, int mid) {
-        ArrayList<SortEvent<T>> events = new ArrayList<>();
+    public static <T extends Comparable<T>> List<SortEvent<T>> merge(T[] arr, int lo, int hi, int mid, List<SortEvent<T>> events) {
         Object[] merged = new Object[hi-lo+1];
         int i = lo;
         int j = mid+1;
@@ -99,6 +101,7 @@ public class Sorts {
         }
 
         for(int a = 0 ; a<merged.length; a++) {
+        	events.add(new CopyEvent<T>(lo+a,(T) merged[a]));
             arr[lo+a] = (T) merged[a];
         }
         
@@ -110,32 +113,42 @@ public class Sorts {
      * @param arr the array to be sorted
      * @param lo the lower bound index
      * @param hi the upper bound index
+     * @return A list of SortEvents that records the actions needed to merge sort arr
      */
-    public static <T extends Comparable<T>> void mergeSortHelper(T[] arr, int lo, int hi) {
+    public static <T extends Comparable<T>> List<SortEvent<T>> mergeSortHelper(T[] arr, int lo, int hi, List<SortEvent<T>> events) {
         if(lo<hi) {
             int mid = lo + (hi-lo)/2;
 
             //Sorting the left half
-            mergeSortHelper(arr,lo,mid);
+            events = mergeSortHelper(arr,lo,mid, events);
 
             //Sorting the right half
-            mergeSortHelper(arr,mid+1,hi);
+            events = mergeSortHelper(arr,mid+1,hi, events);
 
             //Merge the sorted parts
-            merge(arr,lo,hi,mid);
+            events = merge(arr,lo,hi,mid, events);
         }
-
+        
+        return events;
     }
 
     /**
      * Driver method behind merge sort
      * @param arr the array to be sorted
+     * @return A list of SortEvents that records the actions needed to merge sort arr
      */
-    public static <T extends Comparable<T>> void mergeSort(T[] arr) {
-        mergeSortHelper(arr,0,arr.length-1);
+    public static <T extends Comparable<T>> List<SortEvent<T>> mergeSort(T[] arr) {
+    	List<SortEvent<T>> events = new ArrayList<SortEvent<T>>();
+        events = mergeSortHelper(arr,0,arr.length-1, events);
+        return events;
     }
 
 
+    /**
+     * Sorts an array with the Bubble (sinking) sort technique
+     * @param arr The array to be sorted
+     * @return an ArrayList of SortEvents that records the actions needed to bubble sort arr
+     */
     public static <T extends Comparable<? super T>> ArrayList<SortEvent<T>> bubbleSort(T[] arr) { 
         ArrayList<SortEvent<T>> events = new ArrayList<>();
         int n = arr.length;  
@@ -175,16 +188,6 @@ public class Sorts {
                 return fir;
             }
         }
-        /*  //= Math.max(Math.min(arr[fir], arr[mid]), Math.min(Math.max(arr[fir], arr[mid]), arr[last])); 
-        if(answer == arr[fir]) {
-            return fir;
-        }
-        else if(answer == arr[mid]) {
-            return mid;
-        }
-        else {
-            return last;
-        } */
     }
 
     /**
@@ -192,13 +195,15 @@ public class Sorts {
      * @param arr the array to be sorted
      * @param lo the low end of the array 
      * @param hi the high end of the array
+     * @return A list of SortEvents that records the actions needed to Quick Sort arr
      */
-    public static <T extends Comparable<? super T>> void quicksortHelper(T[] arr, int lo, int hi) {
+    public static <T extends Comparable<? super T>> List<SortEvent<T>> quicksortHelper(T[] arr, int lo, int hi, List<SortEvent<T>> events) {
 
         // finding the median to be placed at end
         int lastIndex = hi;
         int midIndex = lo + (hi - lo) / 2;
         int quicksortMedian = findMedianIndex(arr, 0, midIndex, lastIndex);
+        events.add(new SwapEvent<T>(quicksortMedian, lastIndex));
         swap(arr, quicksortMedian, lastIndex);
 
         //setting pointers 
@@ -209,14 +214,19 @@ public class Sorts {
         while(i <= j) {
 
             while(arr[i].compareTo(arr[lastIndex]) < 0) {
+            	events.add(new CompareEvent<T>(i,lastIndex));
                 i++;
             }	
 
             while(arr[j].compareTo(arr[lastIndex]) > 0) {
+            	events.add(new CompareEvent<T>(j,lastIndex));
                 j--;
             }
 
+            
             if(i <= j) {
+            	events.add(new CompareEvent<T>(i,j));
+            	events.add(new SwapEvent<T>(i,j));
                 swap(arr, i, j);
                 i++;
                 j--;
@@ -224,31 +234,39 @@ public class Sorts {
         }
 
         //splitting the array
-
+        
+        events.add(new SwapEvent<T>(i,lastIndex));
         swap(arr, i, lastIndex);
 
         // sorting our two split arrays
         if(lo < j) {
-            quicksortHelper(arr, lo, j);
+            events = quicksortHelper(arr, lo, j, events);
         }
         if(i + 1 < hi) {
-            quicksortHelper(arr, i, hi);
+            events = quicksortHelper(arr, i, hi, events);
         }
+        return events;
     }
 
     /**
      * Quicksorts the array arr
      * @param arr the array to be sorted
+     * @return A list of SortEvents that records the actions needed to QuickSort arr
      */
-    public static <T extends Comparable<? super T>> void quicksort(T[] arr) {
-        quicksortHelper(arr, 0, arr.length - 1);
+    public static <T extends Comparable<? super T>> List<SortEvent<T>> quicksort(T[] arr) {
+    	List<SortEvent<T>> events = new ArrayList<>();
+        events = quicksortHelper(arr, 0, arr.length - 1, events);
+        return events;
     }
     
+    /**
+     * Takes an array of Ts and sorts them with the instructions of events 
+     * @param l An array of Ts that needs to be sorted
+     * @param events A list of Sort Events that tells how to sort l if done in order
+     */
     public static <T> void eventSort(T[] l, List<SortEvent<T>> events) {
         for(SortEvent event:events) {
             event.apply(l);
         }
-    }
-
-    
+    }  
 }
