@@ -142,4 +142,16 @@ public class SortsTest {
         assertArrayEquals(test, sorted);
 
     } 
+
+    @Test 
+    public void testQuickSort4() {
+        Integer[] test = {4,8,1,22,4,1,5,6};
+        Sorts.quicksort(test);
+        Integer[] sorted = {1,1,4,4,5,6,8,22};
+        for(Integer i:test) {
+            System.out.println(i);
+        }
+        assertArrayEquals(test, sorted);
+
+    } 
 }

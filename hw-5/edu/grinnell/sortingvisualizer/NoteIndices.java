@@ -1,9 +1,6 @@
 package edu.grinnell.sortingvisualizer;
 
 import java.util.Random;
-
-import edu.grinnell.sortingvisualizer.sortevents.CompareEvent;
-import edu.grinnell.sortingvisualizer.sortevents.SortEvent;
 import edu.grinnell.sortingvisualizer.sorts.Sorts;
 
 /**
@@ -14,14 +11,14 @@ import edu.grinnell.sortingvisualizer.sorts.Sorts;
 public class NoteIndices {
     public Integer[] indices;
     public boolean[] high_lights;
-    
+
     /**
      * @param n the size of the scale object that these indices map into
      */
     public NoteIndices(int n) {
         this.indices = new Integer[n];
     }
-    
+
     /**
      * Reinitializes this collection of indices to map into a new scale object
      * of the given size.  The collection is also shuffled to provide an
@@ -35,27 +32,27 @@ public class NoteIndices {
         for(int i = 0; i< n ; i++) {
             indices[i] = i;
         }
-       
+
         // Creating a object for Random class
         Random r = new Random();
-        
+
         // Start from the last element and swap one by one. We don't
         // need to run for the first element that's why i > 0
         for (int i = n-1; i > 0; i--) {
-            
+
             // Pick a random index from 0 to i
             int j = r.nextInt(n);
-            
+
             // Swap indices[i] with the element at random index
             Sorts.swap(indices, i, j);
         }    
     }
-    
+
     /** @return the indices of this NoteIndices object */
     public Integer[] getNotes() { 
         return indices;
     }
-    
+
 
     /**
      * Highlights the given index of the note array
@@ -64,13 +61,13 @@ public class NoteIndices {
     public void highlightNote(int index) {
         this.high_lights[index] = true;
     }
-    
+
     /** @return true if the given index is highlighted */
     public boolean isHighlighted(int index) {
         if(this.high_lights[index] == true) return true;
         return false;
     }
-    
+
     /** Clears all highlighted indices from this collection */
     public void clearAllHighlighted() {
         for(int i = 0; i < this.high_lights.length; i++) {

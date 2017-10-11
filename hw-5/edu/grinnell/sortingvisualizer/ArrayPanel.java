@@ -33,7 +33,8 @@ public class ArrayPanel extends JPanel {
 
         int x = 0;
         for(int i = 0; i < size; i++) {
-
+            
+            //making scales color shift from brown to purple
             int purple = 19+(120/size)*indices[i];
 
             g.setColor(new Color(139,69,purple));

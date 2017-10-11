@@ -1,10 +1,8 @@
 package edu.grinnell.sortingvisualizer.sorts;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import edu.grinnell.sortingvisualizer.sortevents.*;
-
 
 public class Sorts {
 
@@ -33,14 +31,14 @@ public class Sorts {
             for(int j = i ; j < arr.length ; j++) {
                 events.add(new CompareEvent<T>(i,j));
                 if(arr[j].compareTo(arr[sm_index])<0) sm_index = j;
-                
+
             }
             events.add(new SwapEvent<T>(i,sm_index));
             swap(arr, sm_index, i);
         }
         return events;
     }
-    
+
 
 
     /**
@@ -101,10 +99,10 @@ public class Sorts {
         }
 
         for(int a = 0 ; a<merged.length; a++) {
-        	events.add(new CopyEvent<T>(lo+a,(T) merged[a]));
+            events.add(new CopyEvent<T>(lo+a,(T) merged[a]));
             arr[lo+a] = (T) merged[a];
         }
-        
+
         return events;
     }
 
@@ -128,7 +126,7 @@ public class Sorts {
             //Merge the sorted parts
             events = merge(arr,lo,hi,mid, events);
         }
-        
+
         return events;
     }
 
@@ -138,7 +136,7 @@ public class Sorts {
      * @return A list of SortEvents that records the actions needed to merge sort arr
      */
     public static <T extends Comparable<T>> List<SortEvent<T>> mergeSort(T[] arr) {
-    	List<SortEvent<T>> events = new ArrayList<SortEvent<T>>();
+        List<SortEvent<T>> events = new ArrayList<SortEvent<T>>();
         events = mergeSortHelper(arr,0,arr.length-1, events);
         return events;
     }
@@ -152,7 +150,7 @@ public class Sorts {
     public static <T extends Comparable<? super T>> ArrayList<SortEvent<T>> bubbleSort(T[] arr) { 
         ArrayList<SortEvent<T>> events = new ArrayList<>();
         int n = arr.length;  
- 
+
         for(int i=0; i < n; i++){  
             for(int j=1; j < (n-i); j++){  
                 events.add(new CompareEvent<T>(j-1,j));
@@ -199,52 +197,45 @@ public class Sorts {
      */
     public static <T extends Comparable<? super T>> List<SortEvent<T>> quicksortHelper(T[] arr, int lo, int hi, List<SortEvent<T>> events) {
 
-        // finding the median to be placed at end
-        int lastIndex = hi;
+        if (lo>= hi) return events;
         int midIndex = lo + (hi - lo) / 2;
-        int quicksortMedian = findMedianIndex(arr, 0, midIndex, lastIndex);
-        events.add(new SwapEvent<T>(quicksortMedian, lastIndex));
-        swap(arr, quicksortMedian, lastIndex);
-
-        //setting pointers 
+        int quicksortMedian = findMedianIndex(arr, lo, midIndex, hi);
         int i = lo;
         int j = hi-1;
+        events.add(new SwapEvent<T>(quicksortMedian, hi));
+        swap(arr, quicksortMedian, hi);
 
-        //Sorting the array
-        while(i <= j) {
+        if(i == j && arr[lo].compareTo(arr[hi])<0) {
+            return events;
+        }
 
-            while(arr[i].compareTo(arr[lastIndex]) < 0) {
-            	events.add(new CompareEvent<T>(i,lastIndex));
+        while(i < j) {
+
+            while(arr[i].compareTo(arr[hi]) < 0) {
+                events.add(new CompareEvent<T>(i,hi));
                 i++;
             }	
 
-            while(arr[j].compareTo(arr[lastIndex]) > 0) {
-            	events.add(new CompareEvent<T>(j,lastIndex));
+            while(arr[j].compareTo(arr[hi]) > 0 && j >= i) {
+                events.add(new CompareEvent<T>(j,hi));
                 j--;
             }
 
-            
-            if(i <= j) {
-            	events.add(new CompareEvent<T>(i,j));
-            	events.add(new SwapEvent<T>(i,j));
+
+            if(i < j) {
+                events.add(new CompareEvent<T>(i,j));
+                events.add(new SwapEvent<T>(i,j));
                 swap(arr, i, j);
-                i++;
-                j--;
             }
         }
 
         //splitting the array
-        
-        events.add(new SwapEvent<T>(i,lastIndex));
-        swap(arr, i, lastIndex);
+        events.add(new SwapEvent<T>(i,hi));
+        swap(arr, i, hi);
 
         // sorting our two split arrays
-        if(lo < j) {
-            events = quicksortHelper(arr, lo, j, events);
-        }
-        if(i + 1 < hi) {
-            events = quicksortHelper(arr, i, hi, events);
-        }
+        events = quicksortHelper(arr, lo, j, events);
+        events = quicksortHelper(arr, j+1, hi, events); //i
         return events;
     }
 
@@ -254,11 +245,11 @@ public class Sorts {
      * @return A list of SortEvents that records the actions needed to QuickSort arr
      */
     public static <T extends Comparable<? super T>> List<SortEvent<T>> quicksort(T[] arr) {
-    	List<SortEvent<T>> events = new ArrayList<>();
+        List<SortEvent<T>> events = new ArrayList<>();
         events = quicksortHelper(arr, 0, arr.length - 1, events);
         return events;
     }
-    
+
     /**
      * Takes an array of Ts and sorts them with the instructions of events 
      * @param l An array of Ts that needs to be sorted

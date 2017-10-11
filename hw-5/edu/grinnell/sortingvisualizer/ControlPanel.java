@@ -2,7 +2,6 @@ package edu.grinnell.sortingvisualizer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import edu.grinnell.sortingvisualizer.sortevents.CompareEvent;
+import edu.grinnell.sortingvisualizer.sortevents.CopyEvent;
 import edu.grinnell.sortingvisualizer.sortevents.SortEvent;
 import edu.grinnell.sortingvisualizer.sorts.Sorts;
 
@@ -53,7 +54,7 @@ public class ControlPanel extends JPanel {
             return Sorts.bubbleSort(arr);  
         case "Merge":
             return Sorts.mergeSort(arr);
-        case("Quick"):
+        case "Quick":
             return Sorts.quicksort(arr);
         default:
             throw new IllegalArgumentException("generateEvents");
@@ -140,7 +141,10 @@ public class ControlPanel extends JPanel {
                 // TODO: fill me in
                 // 1. Create the sorting events list
                 // 2. Add in the compare events to the end of the list
-                final List<SortEvent<Integer>> events = generateEvents(sorts.getSelectedItem().toString(),notes.indices.clone());
+                List<SortEvent<Integer>> events = generateEvents(sorts.getSelectedItem().toString(),notes.indices.clone());
+                for(int i = 0; i < notes.getNotes().length - 1; i++) {
+                    events.add(new CompareEvent<Integer>(i, i+1));
+                }
                 final int event_size = events.size();
                 
                 // NOTE: The Timer class repetitively invokes a method at a
@@ -152,11 +156,12 @@ public class ControlPanel extends JPanel {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     private int index = 0;
-                    
+                     
                     @Override
                     public void run() {
+                        notes.clearAllHighlighted();
                         if (index < event_size) {
-                            notes.clearAllHighlighted();
+                            panel.repaint();
                             // TODO: fill me in
                             // 1. Apply the next sort event.
                             // 3. Play the corresponding notes denoted by the
@@ -166,18 +171,18 @@ public class ControlPanel extends JPanel {
                          // 1. Apply the next sort event.
                             e.apply(notes.getNotes());
                          // 2.Draw the panel
-                            notes.high_lights[e.getAffectedIndices().get(0)] = true;
-                            notes.high_lights[e.getAffectedIndices().get(1)] = true;
                          // 3. Play the corresponding notes denoted by the
                          //    affected indices logged in the event. 
                             scale.playNote(e.getAffectedIndices().get(0), e.isEmphasized());
+                            if(!(e instanceof CopyEvent)) {
                             scale.playNote(e.getAffectedIndices().get(1), e.isEmphasized());
-                         // 4. Highlight those affected indices.
-                            panel.paintComponent(panel.getGraphics());
-                            panel.repaint();
+                            }
+                         // 4. Highlight those affected indices.      
+                            notes.highlightNote(e.getAffectedIndices().get(0));
+                            if(!(e instanceof CopyEvent)) {
+                                notes.highlightNote(e.getAffectedIndices().get(1));
+                            }
                         } else {
-                            notes.clearAllHighlighted();
-                            panel.paintComponent(panel.getGraphics());
                             this.cancel();
                             panel.repaint();
                             isSorting = false;
